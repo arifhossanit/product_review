@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Review Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Submit a Product Review</h1>
+        <form id="review-form">
+            <div class="form-group">
+                <label for="product_id">Product ID</label>
+                <input type="number" class="form-control" id="product_id" required>
+            </div>
+            <div class="form-group">
+                <label for="user_id">User ID</label>
+                <input type="number" class="form-control" id="user_id" required>
+            </div>
+            <div class="form-group">
+                <label for="review_details">Review Text</label>
+                <textarea class="form-control" id="review_details" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#review-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var product_id = $('#product_id').val();
+                var user_id = $('#user_id').val();
+                var review_details = $('#review_details').val();
+
+                $.ajax({
+                    url: 'http://localhost/bondstein/review.php',  // API endpoint
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        product_id: product_id,
+                        user_id: user_id,
+                        review_details: review_details
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.success);
+                            $('#review-form').trigger("reset");
+                        }else{
+                            alert(response.error);
+                        }
+                    },
+                    error: function(response) {
+                        alert("Something Wrong! Try later.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
